@@ -65,9 +65,16 @@ class Win10x64DTB(obj.ProfileModification):
                   }
 
     def modification(self, profile):
+    
+        build = profile.metadata.get("build")
+        if build < 14986:
+            value = "\x03\x00\xb6\x00"
+        else:
+            value = "\x03\x00\xb8\x00"
+    
         profile.merge_overlay({
             'VOLATILITY_MAGIC': [ None, {
-            'DTBSignature' : [ None, ['VolatilityMagic', dict(value = "\x03\x00\xb6\x00")]],
+            'DTBSignature' : [ None, ['VolatilityMagic', dict(value = value)]],
             }]})
 
 class Win10x86DTB(obj.ProfileModification):
@@ -564,6 +571,16 @@ class Win10x64_14393(obj.Profile):
     _md_minor = 4
     _md_build = 14393
     _md_vtype_module = 'volatility.plugins.overlays.windows.win10_x64_DD08DD42_vtypes'
+    _md_product = ["NtProductWinNt"]
+
+class Win10x64_054EC405(obj.Profile):
+    """ A Profile for Windows 10 x64 from PDB 054EC405"""
+    _md_memory_model = '64bit'
+    _md_os = 'windows'
+    _md_major = 6
+    _md_minor = 4
+    _md_build = 14986
+    _md_vtype_module = 'volatility.plugins.overlays.windows.win10_x64_054EC405_vtypes'
     _md_product = ["NtProductWinNt"]
 
 class Win10x86(obj.Profile):
